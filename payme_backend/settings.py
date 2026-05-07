@@ -25,13 +25,12 @@ SECRET_KEY = 'django-insecure-i35l_d92@#8t1i1lrkexpngtshu-nvdns#$&!6et!604^g_dgg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['payme123.pythonanywhere.com', 'admin.quyosh24.uz', 'api.quyosh24.uz', 'quyosh24.uz', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']  # Vercel uchun
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',  # Chiroyli admin panel
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -117,7 +116,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = []
 
 
 # Payme Configuration
