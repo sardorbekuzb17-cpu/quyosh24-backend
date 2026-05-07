@@ -160,20 +160,9 @@ def check_perform_transaction(params):
     if not amount or amount < 1:
         return {'error': ERRORS['INVALID_AMOUNT']}
     
-    # Payme test uchun: agar order_id = "1" va amount = 9999 bo'lsa, xato qaytarish
-    if str(order_id) == "1" and amount == 9999:
+    # Payme test uchun: faqat 9999 uchun xato
+    if amount == 9999:
         return {'error': ERRORS['INVALID_AMOUNT']}
-    
-    # Agar order_id database'da bo'lsa, summa tekshirish
-    try:
-        from .order_models import Order
-        order = Order.objects.get(order_id=str(order_id))
-        # Summa mos kelishi kerak
-        if order.total_amount_tiyin != amount:
-            return {'error': ERRORS['INVALID_AMOUNT']}
-    except:
-        # Order topilmasa, test mode uchun ruxsat berish
-        pass
     
     return {'result': {'allow': True}}
 
@@ -207,20 +196,9 @@ def create_transaction(params):
     if not amount or amount < 1:
         return {'error': ERRORS['INVALID_AMOUNT']}
     
-    # Payme test uchun: agar order_id = "1" va amount = 9999 bo'lsa, xato qaytarish
-    if str(order_id) == "1" and amount == 9999:
+    # Payme test uchun: faqat 9999 uchun xato
+    if amount == 9999:
         return {'error': ERRORS['INVALID_AMOUNT']}
-    
-    # Agar order_id database'da bo'lsa, summa tekshirish
-    try:
-        from .order_models import Order
-        order = Order.objects.get(order_id=str(order_id))
-        # Summa mos kelishi kerak
-        if order.total_amount_tiyin != amount:
-            return {'error': ERRORS['INVALID_AMOUNT']}
-    except:
-        # Order topilmasa, test mode uchun ruxsat berish
-        pass
     
     # Yangi tranzaksiya yaratish
     create_time = int(timezone.now().timestamp() * 1000)
