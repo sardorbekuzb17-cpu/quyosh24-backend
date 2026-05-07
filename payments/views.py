@@ -151,16 +151,13 @@ def check_perform_transaction(params):
     if not account:
         return {'error': ERRORS['INVALID_ACCOUNT']}
     
-    order_id = account.get('Quyosh24') or account.get('order_id', '')
-    if not order_id or len(order_id) < 3:
+    # Order ID ni olish (Quyosh24 yoki id)
+    order_id = account.get('Quyosh24') or account.get('order_id') or account.get('id', '')
+    if not order_id or len(str(order_id)) < 1:
         return {'error': ERRORS['INVALID_ACCOUNT']}
     
-    # Buyurtma formatini tekshirish
-    if order_id.isdigit():
-        return {'error': ERRORS['ORDER_NOT_FOUND']}
-    
-    # Amount tekshirish
-    if not amount or amount < 1000:
+    # Amount tekshirish (99 tiyin = test, 1000+ tiyin = real)
+    if not amount or amount < 1:
         return {'error': ERRORS['INVALID_AMOUNT']}
     
     return {'result': {'allow': True}}
@@ -186,23 +183,20 @@ def create_transaction(params):
     except PaymeTransaction.DoesNotExist:
         pass
     
-    # Account tekshirish
-    order_id = account.get('Quyosh24') or account.get('order_id', '')
-    if not order_id or len(order_id) < 3:
+    # Order ID ni olish (Quyosh24 yoki id)
+    order_id = account.get('Quyosh24') or account.get('order_id') or account.get('id', '')
+    if not order_id or len(str(order_id)) < 1:
         return {'error': ERRORS['INVALID_ACCOUNT']}
     
-    if order_id.isdigit():
-        return {'error': ERRORS['ORDER_NOT_FOUND']}
-    
     # Amount tekshirish
-    if not amount or amount < 1000:
+    if not amount or amount < 1:
         return {'error': ERRORS['INVALID_AMOUNT']}
     
     # Yangi tranzaksiya yaratish
     create_time = int(timezone.now().timestamp() * 1000)
     tx = PaymeTransaction.objects.create(
         transaction_id=transaction_id,
-        order_id=order_id,
+        order_id=str(order_id),
         amount=amount,
         time=time,
         create_time=create_time,
