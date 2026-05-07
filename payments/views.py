@@ -328,10 +328,9 @@ def get_statement(params):
 
 
 # ============================================
-# PAYME-PKG Integration (New)
+# PAYME Integration (Removed - using custom implementation)
 # ============================================
 
-from payme.views import PaymeWebHookAPIView
 import logging
 
 # Logger sozlash
