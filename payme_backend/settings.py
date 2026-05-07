@@ -25,12 +25,13 @@ SECRET_KEY = 'django-insecure-i35l_d92@#8t1i1lrkexpngtshu-nvdns#$&!6et!604^g_dgg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['payme123.pythonanywhere.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['payme123.pythonanywhere.com', 'admin.quyosh24.uz', 'api.quyosh24.uz', 'quyosh24.uz', 'localhost', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',  # Chiroyli admin panel
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
