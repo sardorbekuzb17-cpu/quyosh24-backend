@@ -328,104 +328,10 @@ def get_statement(params):
 
 
 # ============================================
-# PAYME Integration (Removed - using custom implementation)
+# PAYME Integration - Custom Implementation Only
 # ============================================
 
 import logging
 
 # Logger sozlash
 logger = logging.getLogger(__name__)
-
-
-class PaymeCallBackAPIView(PaymeWebHookAPIView):
-    """
-    Payme-pkg webhook handler
-    Documentation: https://github.com/Muhammadali-Akbarov/payme-pkg
-    """
-
-    def post(self, request, *args, **kwargs):
-        """Override post method to log all incoming requests"""
-        import json
-        
-        # So'rov ma'lumotlarini log qilish
-        print("\n" + "="*80)
-        print("🔔 PAYME SANDBOX SO'ROV KELDI!")
-        print("="*80)
-        
-        try:
-            body = json.loads(request.body)
-            print(f"📥 Method: {body.get('method', 'N/A')}")
-            print(f"📥 ID: {body.get('id', 'N/A')}")
-            print(f"📥 Params: {json.dumps(body.get('params', {}), indent=2, ensure_ascii=False)}")
-        except:
-            print(f"📥 Raw Body: {request.body.decode('utf-8')}")
-        
-        print(f"📥 Headers: {dict(request.headers)}")
-        print("="*80 + "\n")
-        
-        # Parent metodini chaqirish
-        response = super().post(request, *args, **kwargs)
-        
-        # Javobni log qilish
-        print("\n" + "="*80)
-        print("📤 PAYME JAVOB YUBORILDI!")
-        print("="*80)
-        try:
-            response_data = json.loads(response.content)
-            print(f"📤 Response: {json.dumps(response_data, indent=2, ensure_ascii=False)}")
-        except:
-            print(f"📤 Raw Response: {response.content.decode('utf-8')}")
-        print("="*80 + "\n")
-        
-        return response
-
-    def handle_successfully_payment(self, params, result, *args, **kwargs):
-        """
-        To'lov muvaffaqiyatli amalga oshirilganda chaqiriladi
-        """
-        print("\n" + "🎉"*40)
-        print("✅ TO'LOV MUVAFFAQIYATLI!")
-        print("🎉"*40)
-        print(f"📋 Params: {params}")
-        print(f"📋 Result: {result}")
-        
-        # Order modelini yangilash
-        try:
-            from .order_models import Order
-            order_id = params.get('account', {}).get('order_id')
-            if order_id:
-                order = Order.objects.get(order_id=order_id)
-                order.is_paid = True
-                order.status = Order.STATUS_PAID
-                order.paid_at = timezone.now()
-                order.save()
-                print(f"✅ Buyurtma #{order_id} to'langan deb belgilandi")
-                print("🎉"*40 + "\n")
-        except Exception as e:
-            print(f"❌ Buyurtmani yangilashda xato: {e}")
-            print("🎉"*40 + "\n")
-
-    def handle_cancelled_payment(self, params, result, *args, **kwargs):
-        """
-        To'lov bekor qilinganda chaqiriladi
-        """
-        print("\n" + "❌"*40)
-        print("❌ TO'LOV BEKOR QILINDI!")
-        print("❌"*40)
-        print(f"📋 Params: {params}")
-        print(f"📋 Result: {result}")
-        
-        # Order modelini yangilash
-        try:
-            from .order_models import Order
-            order_id = params.get('account', {}).get('order_id')
-            if order_id:
-                order = Order.objects.get(order_id=order_id)
-                order.status = Order.STATUS_CANCELLED
-                order.save()
-                print(f"❌ Buyurtma #{order_id} bekor qilindi")
-                print("❌"*40 + "\n")
-        except Exception as e:
-            print(f"❌ Buyurtmani yangilashda xato: {e}")
-            print("❌"*40 + "\n")
-
