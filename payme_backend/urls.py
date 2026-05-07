@@ -19,6 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/payme/', include('payme.urls')),  # Payme-pkg default
-    path('api/', include('payments.urls')),  # Custom endpoints (payme-custom)
+    path('api/', include('payments.urls')),  # Custom endpoints
 ]
