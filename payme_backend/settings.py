@@ -27,6 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']  # Vercel uchun
 
+# CSRF Trusted Origins
+CSRF_TRUSTED_ORIGINS = [
+    'https://quyosh24-backend.fly.dev',
+    'https://*.fly.dev',
+]
+
 
 # Application definition
 
